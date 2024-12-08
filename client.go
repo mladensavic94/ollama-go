@@ -29,8 +29,11 @@ type response struct {
 	Done      bool      `json:"done"`
 }
 
-func NewClient(baseURL string) *Client {
-	return &Client{client: &http.Client{Timeout: time.Second * 10}, baseURL: baseURL}
+func NewClient(baseURL string, client *http.Client) *Client {
+	if client == nil {
+		client = &http.Client{Timeout: time.Second * 10}
+	}
+	return &Client{client: client, baseURL: baseURL}
 }
 func (c Client) Prompt(model, prompt string) (string, error) {
 	data, err := json.Marshal(request{model, prompt})
